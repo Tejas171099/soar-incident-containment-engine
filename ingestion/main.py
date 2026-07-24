@@ -4,19 +4,22 @@ from datetime import datetime
 
 from ingestion.normalizer import normalize_alert
 
-app=FastAPI()
+app = FastAPI()
 
 class SIEMAlert(BaseModel):
-    id:str
-    time:datetime
-    src_ip:str
-    type:str
-    host:str
-    severity:str
+    id: str
+    time: datetime
+    src_ip: str
+    type: str
+    host: str
+    severity: str
+
+@app.get("/")
+def home():
+    return {"message":"SOAR ingestion service is running"}
 
 @app.post("/alerts")
-
-def receive_alert(alert:SIEMAlert):
+def receive_alert(alert: SIEMAlert):
 
     normalized=normalize_alert(alert.model_dump())
 
