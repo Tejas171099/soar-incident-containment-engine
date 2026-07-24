@@ -1,0 +1,17 @@
+- Created dashboard/ directory for the SOC dashboard planning.
+- Created tests/ directory for QA and test case documentation.
+- Added dashboard_plan.md to document the Week 1 alert fields.
+- Added wireframe.md as a placeholder for the dashboard layout.
+- Added README.md inside the dashboard folder.
+- Added test_cases.md to begin QA test case preparation.
+- Reviewed README.md and docs/alert_format.md to understand the common alert format.
+- Documented the required dashboard fields:
+  • Alert ID
+  • Time Received
+  • Source IP
+  • Alert Type
+  • Host
+  • Severity/Risk
+  • Action Taken
+  • Action Status
+  • Timeline Events
