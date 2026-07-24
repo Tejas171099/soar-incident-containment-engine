@@ -2,26 +2,29 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from datetime import datetime
 
-app = FastAPI()
+from ingestion.normalizer import normalize_alert
+
+app=FastAPI()
 
 class SIEMAlert(BaseModel):
-    id: str
-    time: datetime
-    src_ip: str
-    type: str
-    host: str
-    severity: str
-
-@app.get("/")
-def home():
-    return {"message":"SOAR ingestion service is running"}
+    id:str
+    time:datetime
+    src_ip:str
+    type:str
+    host:str
+    severity:str
 
 @app.post("/alerts")
-def receive_alert(alert: SIEMAlert):
+
+def receive_alert(alert:SIEMAlert):
+
+    normalized=normalize_alert(alert.model_dump())
 
     return {
+
         "status":"received",
-        "alert_id":alert.id,
-        "source_ip":alert.src_ip,
-        "message":"Alert received successfully"
+
+        "normalized_alert":normalized,
+
+        "message":"Alert normalized successfully"
     }
