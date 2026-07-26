@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 from ingestion.normalizer import normalize_alert
+from ingestion.logger import logger
 
 app = FastAPI()
 
@@ -23,6 +24,10 @@ def receive_alert(alert: SIEMAlert):
 
     normalized=normalize_alert(alert.model_dump())
 
+    logger.info(
+        f"Alert received ID={alert.id} IP={alert.src_ip}"
+    )
+    
     return {
 
         "status":"received",
