@@ -4,8 +4,12 @@ from datetime import datetime
 
 from ingestion.normalizer import normalize_alert
 from ingestion.logger import logger
+from ingestion.threat_lookup import check_ip_reputation
 
-app = FastAPI()
+app = FastAPI(
+    title="SOAR Incident Containment Engine",
+    version="1.0"
+)
 
 class SIEMAlert(BaseModel):
     id: str
@@ -27,12 +31,18 @@ def receive_alert(alert: SIEMAlert):
     logger.info(
         f"Alert received ID={alert.id} IP={alert.src_ip}"
     )
-    
+
+    enrichment = check_ip_reputation(
+        normalized.get("source_ip")
+    )
+
+    logger.info(
+        f"Threat lookup completed for {normalized.get('source_ip')}"
+    )
+
     return {
-
         "status":"received",
-
         "normalized_alert":normalized,
-
-        "message":"Alert normalized successfully"
+        "enrichment":enrichment,
+        "message":"Alert received and enriched successfully"
     }
