@@ -2,7 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# Load environment variables from .env
+# Load environment variables
 load_dotenv()
 
 API_KEY = os.getenv("ABUSEIPDB_API_KEY")
@@ -16,6 +16,7 @@ ABUSEIPDB_URL = "https://api.abuseipdb.com/api/v2/check"
 def check_ip_reputation(ip: str):
     """
     Check the reputation of an IP address using AbuseIPDB.
+    Returns standardized enrichment fields for the SOAR engine.
     """
 
     if not ip:
@@ -45,9 +46,28 @@ def check_ip_reputation(ip: str):
 
         data = response.json()["data"]
 
+        # Reputation score
+        reputation_score = data["abuseConfidenceScore"]
+
+        # Decide risk level and action
+        if reputation_score >= 80:
+            risk_level = "High"
+            recommended_action = "Block IP"
+
+        elif reputation_score >= 40:
+            risk_level = "Medium"
+            recommended_action = "Investigate"
+
+        else:
+            risk_level = "Low"
+            recommended_action = "Monitor"
+
         return {
             "ip": data["ipAddress"],
-            "abuse_confidence_score": data["abuseConfidenceScore"],
+            "reputation_score": reputation_score,
+            "risk_level": risk_level,
+            "recommended_action": recommended_action,
+            "source": "AbuseIPDB",
             "country": data["countryCode"],
             "isp": data["isp"],
             "domain": data["domain"],
