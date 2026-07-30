@@ -11,3 +11,7 @@ Assigned to: Tejas
 ## Issue 3
 Title: Update dashboard with risk display
 Assigned to: Aleena
+
+## Issue 4
+Title: Verify Week 2 enrichment integration end-to-end
+Assigned to: Merin
