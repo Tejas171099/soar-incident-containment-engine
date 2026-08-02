@@ -1,6 +1,8 @@
-def choose_action(risk_level):
+def choose_action(risk_level: str) -> str:
     if risk_level == "high":
         return "block_ip"
     elif risk_level == "medium":
         return "manual_review"
-    return "no_action"
+    elif risk_level == "low":
+        return "no_action"
+    return "escalate_to_analyst"
