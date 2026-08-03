@@ -1,36 +1,42 @@
 # Dashboard Data Requirements
 
+## Project
+SOAR Incident Containment Engine
+
 ## Purpose
-This document defines the data required for the SOAR Dashboard. It helps the backend team understand which fields must be sent to the dashboard and identifies which fields are available in Week 1 and which will be added in later development.
+This document defines the data fields required by the dashboard to display security alerts and enriched threat intelligence information. These requirements support the integration of alert ingestion, automated threat enrichment, and SOAR playbook execution.
 
-| Field | Description | Required | Available in Week 1 | Available Later |
-|--------|-------------|----------|---------------------|-----------------|
-| Alert ID | Unique identifier for each alert | Yes | ✅ Yes | - |
-| Time Received | Timestamp when the alert is received | Yes | ✅ Yes | - |
-| Source IP | IP address that generated the alert | Yes | ✅ Yes | - |
-| Alert Type | Type of security event (Brute Force, Malware, etc.) | Yes | ✅ Yes | - |
-| Host | Target system or endpoint | Yes | ✅ Yes | - |
-| Severity | Alert severity (Low, Medium, High, Critical) | Yes | ✅ Yes | - |
-| Risk Score | Calculated numerical risk score | Yes | ❌ No | ✅ Week 2+ |
-| Action Taken | Automated SOAR response (Block IP, Isolate Host, etc.) | Yes | ❌ No | ✅ Week 2+ |
-| Action Status | Success, Failed, Pending Approval | Yes | ❌ No | ✅ Week 2+ |
-| Timeline Events | Chronological log of investigation and actions | Yes | ❌ No | ✅ Week 3+ |
+| Field Name | Week | Source | Required | Description |
+|------------|------|--------|----------|-------------|
+| Alert ID | Week 1 | Alert Ingestion | Yes | Unique identifier for each security alert. |
+| Timestamp | Week 1 | Alert Ingestion | Yes | Time the alert was received. |
+| Source IP | Week 1 | Alert Ingestion | Yes | IP address that generated the alert. |
+| Alert Type | Week 1 | Alert Ingestion | Yes | Type of security event detected. |
+| Host | Week 1 | Alert Ingestion | Yes | Host or endpoint associated with the alert. |
+| Severity | Week 1 | Alert Ingestion | Yes | Initial severity assigned to the alert. |
+| Reputation Score | Week 2 | Threat Enrichment | Yes | Numerical score indicating the reputation of the source IP or domain. |
+| Risk Level | Week 2 | Threat Enrichment | Yes | Overall threat level such as Low, Medium, High, or Critical. |
+| Recommended Action | Week 2 | SOAR Playbook | Yes | Suggested response based on the enrichment results. |
+| Enrichment Source | Week 2 | Threat Enrichment | Yes | External intelligence provider used for enrichment (for example VirusTotal or AbuseIPDB). |
 
-## Week 1 Available Data
+## Dashboard Display Requirements
+
+The dashboard should display:
+
 - Alert ID
-- Time Received
+- Timestamp
 - Source IP
 - Alert Type
 - Host
 - Severity
-
-## Future Dashboard Data
-- Risk Score
-- Action Taken
-- Action Status
-- Timeline Events
+- Reputation Score
+- Risk Level
+- Recommended Action
+- Enrichment Source
 
 ## Notes
-- Week 1 focuses on receiving and displaying alert information.
-- Future weeks will integrate automated response data and case timeline information.
-- The dashboard should be designed to support additional fields without major UI changes.
+
+- Week 1 focused on alert ingestion and dashboard planning.
+- Week 2 introduces automated threat enrichment.
+- The dashboard must clearly display the enrichment results for each alert.
+- QA testing must verify that enrichment data is displayed correctly and that the dashboard behaves safely if the external enrichment service is unavailable.
