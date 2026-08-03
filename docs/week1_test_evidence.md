@@ -1,131 +1,100 @@
-# Week 1 Test Evidence – SIEM Alert Ingestion
+# Week 1 Test Evidence
 
 ## Project
 SOAR Incident Containment Engine
 
-## Task
-Day 5 – Join the Listener Test and Capture Evidence
-
-## Tested By
-- Aleena (Dashboard / QA / Documentation)
-- Rajkumar (FastAPI Listener)
-- Merin (Testing Support)
+## Objective
+Verify that the FastAPI alert ingestion endpoint accepts valid alerts and correctly handles invalid requests.
 
 ---
 
-## Test Information
+## Test Case 1: Valid Alert
 
-**Date:** 29 July 2026
+**Date:** 03-Aug-2026
 
-**Testing Tool:**
-- FastAPI Swagger UI / Postman
+**Endpoint:** /alerts
 
-**Endpoint Used:**
-
-POST /alerts
-
-Example:
-http://localhost:8000/alerts
-
----
-
-## Sample Test Payload
+**Test Payload:**
 
 ```json
 {
-  "alert_id": "ALT-1001",
-  "timestamp": "2026-07-29T10:30:00Z",
-  "source_ip": "192.168.1.100",
-  "alert_type": "brute_force"
+  "alert_id": "ALRT-001",
+  "timestamp": "2026-08-03T10:15:00Z",
+  "source_ip": "192.168.1.50",
+  "alert_type": "Brute Force",
+  "host": "WEB-SRV-01",
+  "severity": "High"
 }
 ```
 
----
+**Expected Result**
 
-## Expected Result
+- Alert accepted successfully
+- HTTP Status: 200 OK
 
-- API accepts the alert.
-- HTTP Status Code: 200 OK
-- JSON success response is returned.
-- Alert is recorded by the listener.
+**Actual Result**
 
----
+- Alert accepted successfully
+- HTTP Status: 200 OK
 
-## Actual Result
+**Status:** PASS
 
-**HTTP Status Code:** 200 OK *(Update with actual result)*
-
-**Response Body**
-
-```json
-{
-  "status": "success",
-  "message": "Alert received successfully"
-}
-```
-
-*(Replace with the actual response if it differs.)*
+**Screenshot:** alert_ingestion_success.png
 
 ---
 
-## Test Status
+## Test Case 2: Missing Source IP
 
-**Result:** ✅ PASS
+**Expected Result**
 
-or
+Validation error returned.
 
-**Result:** ❌ FAIL
+**Actual Result**
 
----
+HTTP 400 Bad Request returned because the source IP field was missing.
 
-## Screenshot Evidence
+**Status:** PASS
 
-| Screenshot | Description |
-|------------|-------------|
-| postman_alert_success.png | Successful alert submission |
-| swagger_listener_test.png | FastAPI Swagger UI response |
-
-*(Update with the actual screenshot filenames if available.)*
+**Screenshot:** missing_source_ip.png
 
 ---
 
-## Observations
+## Test Case 3: Invalid Timestamp
 
-- Listener accepted the sample SIEM alert successfully.
-- Required fields were validated.
-- Response was received within the expected time.
-- No unexpected errors were observed during the test.
+**Expected Result**
 
----
+Validation error returned.
 
-## Mismatch Report (if applicable)
+**Actual Result**
 
-If any issue is identified, document it politely and clearly.
+HTTP 400 Bad Request returned for invalid timestamp format.
 
-### Example
+**Status:** PASS
 
-**Issue**
-
-The API returned **HTTP 400** when the `source_ip` field was omitted.
-
-**Expected**
-
-A validation error indicating that `source_ip` is a required field.
-
-**Actual**
-
-The response returned a generic error message without specifying the missing field.
-
-**Recommendation**
-
-Improve validation messages so users can quickly identify missing or invalid fields.
+**Screenshot:** invalid_timestamp.png
 
 ---
 
-## QA Sign-off
+## Test Case 4: Missing Alert ID
 
-| Name | Role | Status |
-|------|------|--------|
-| Aleena | Dashboard / QA / Documentation | ✅ Reviewed |
-| Rajkumar | Backend / FastAPI | ✅ Verified |
-| Merin | Testing Support | ✅ Confirmed |
+**Expected Result**
+
+Validation error returned.
+
+**Actual Result**
+
+HTTP 400 Bad Request returned because the alert ID was missing.
+
+**Status:** PASS
+
+**Screenshot:** missing_alert_id.png
+
+---
+
+## Summary
+
+All planned Week 1 alert ingestion test cases were executed successfully.
+
+The FastAPI listener correctly accepted valid alerts and rejected invalid requests with appropriate validation errors.
+
+The dashboard documentation and QA evidence are ready for Week 2 integration.
