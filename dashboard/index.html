@@ -1,104 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOAR Incident Containment Engine Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOAR Incident Containment Engine Dashboard</title>
 
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, Helvetica, sans-serif;
-        }
+<style>
 
-        body{
-            background:#f4f6f9;
-            padding:30px;
-            color:#333;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
 
-        h1{
-            text-align:center;
-            color:#0d47a1;
-            margin-bottom:25px;
-        }
+body{
+    background:#f4f6f9;
+    padding:30px;
+    color:#333;
+}
 
-        .summary{
-            display:grid;
-            grid-template-columns:repeat(4,1fr);
-            gap:15px;
-            margin-bottom:25px;
-        }
+h1{
+    text-align:center;
+    color:#0d47a1;
+    margin-bottom:25px;
+}
 
-        .card{
-            background:#fff;
-            padding:20px;
-            border-radius:10px;
-            box-shadow:0 2px 8px rgba(0,0,0,.1);
-        }
+.summary{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+    margin-bottom:25px;
+}
 
-        .card h3{
-            color:#1565c0;
-            margin-bottom:10px;
-        }
+.card{
+    background:#fff;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+    text-align:center;
+}
 
-        table{
-            width:100%;
-            border-collapse:collapse;
-            background:white;
-            box-shadow:0 2px 8px rgba(0,0,0,.1);
-        }
+.card h3{
+    color:#1565c0;
+    margin-bottom:10px;
+}
 
-        th,td{
-            border:1px solid #ddd;
-            padding:10px;
-            text-align:center;
-        }
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
 
-        th{
-            background:#1976d2;
-            color:white;
-        }
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
 
-        .high{
-            color:red;
-            font-weight:bold;
-        }
+th{
+    background:#1976d2;
+    color:#fff;
+}
 
-        .medium{
-            color:orange;
-            font-weight:bold;
-        }
+/* Severity */
 
-        .low{
-            color:green;
-            font-weight:bold;
-        }
+.severity-high{
+    color:#d32f2f;
+    font-weight:bold;
+}
 
-        .timeline{
-            margin-top:25px;
-            background:white;
-            padding:20px;
-            border-radius:10px;
-            box-shadow:0 2px 8px rgba(0,0,0,.1);
-        }
+.severity-medium{
+    color:#f57c00;
+    font-weight:bold;
+}
 
-        .timeline ul{
-            margin-left:20px;
-        }
+.severity-low{
+    color:#388e3c;
+    font-weight:bold;
+}
 
-        .timeline li{
-            margin:10px 0;
-        }
+/* Risk Level */
 
-        footer{
-            margin-top:25px;
-            text-align:center;
-            color:#666;
-        }
-    </style>
+.high{
+    background:#ffebee;
+    color:#c62828;
+    font-weight:bold;
+}
+
+.medium{
+    background:#fff8e1;
+    color:#f9a825;
+    font-weight:bold;
+}
+
+.low{
+    background:#e8f5e9;
+    color:#2e7d32;
+    font-weight:bold;
+}
+
+.timeline{
+    margin-top:25px;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.timeline h2{
+    color:#1565c0;
+    margin-bottom:15px;
+}
+
+.timeline ul{
+    padding-left:20px;
+}
+
+.timeline li{
+    margin-bottom:10px;
+}
+
+footer{
+    margin-top:25px;
+    text-align:center;
+    color:#666;
+}
+
+</style>
 
 </head>
 
@@ -119,12 +149,12 @@
 </div>
 
 <div class="card">
-<h3>High Risk</h3>
+<h3>High Risk Alerts</h3>
 <h2>5</h2>
 </div>
 
 <div class="card">
-<h3>Resolved</h3>
+<h3>Resolved Alerts</h3>
 <h2>11</h2>
 </div>
 
@@ -135,7 +165,6 @@
 <thead>
 
 <tr>
-
 <th>Alert ID</th>
 <th>Time</th>
 <th>Source IP</th>
@@ -146,7 +175,6 @@
 <th>Risk Level</th>
 <th>Recommended Action</th>
 <th>Enrichment Source</th>
-
 </tr>
 
 </thead>
@@ -154,48 +182,42 @@
 <tbody>
 
 <tr>
-
 <td>ALRT-001</td>
 <td>10:15 AM</td>
 <td>192.168.1.50</td>
 <td>Brute Force</td>
 <td>WEB-SRV-01</td>
-<td class="high">High</td>
+<td class="severity-high">High</td>
 <td>92</td>
-<td class="high">High</td>
+<td class="high">High Risk</td>
 <td>Block Source IP</td>
 <td>VirusTotal</td>
-
 </tr>
 
 <tr>
-
 <td>ALRT-002</td>
-<td>10:32 AM</td>
-<td>172.16.10.15</td>
+<td>10:34 AM</td>
+<td>172.16.10.20</td>
 <td>Port Scan</td>
-<td>DB-SRV-02</td>
-<td class="medium">Medium</td>
-<td>70</td>
-<td class="medium">Medium</td>
+<td>APP-SRV-02</td>
+<td class="severity-medium">Medium</td>
+<td>71</td>
+<td class="medium">Medium Risk</td>
 <td>Monitor Activity</td>
 <td>AbuseIPDB</td>
-
 </tr>
 
 <tr>
-
 <td>ALRT-003</td>
-<td>11:05 AM</td>
-<td>10.10.15.24</td>
-<td>Malware</td>
-<td>CLIENT-05</td>
-<td class="high">Critical</td>
-<td>98</td>
-<td class="high">Critical</td>
-<td>Isolate Host</td>
+<td>11:02 AM</td>
+<td>10.0.0.18</td>
+<td>Malware Detection</td>
+<td>CLIENT-08</td>
+<td class="severity-low">Low</td>
+<td>25</td>
+<td class="low">Low Risk</td>
+<td>Continue Monitoring</td>
 <td>VirusTotal</td>
-
 </tr>
 
 </tbody>
@@ -207,21 +229,19 @@
 <h2>Incident Timeline</h2>
 
 <ul>
-
-<li>10:15 AM - Alert received from SIEM</li>
-<li>10:16 AM - Threat enrichment completed</li>
-<li>10:17 AM - Reputation score calculated</li>
-<li>10:18 AM - Risk level identified</li>
-<li>10:19 AM - Recommended action generated</li>
-<li>10:20 AM - Analyst notified</li>
-
+<li>10:15 AM – Alert received from SIEM</li>
+<li>10:16 AM – Threat enrichment completed</li>
+<li>10:17 AM – Reputation score calculated</li>
+<li>10:18 AM – Risk level assigned</li>
+<li>10:19 AM – Recommended action generated</li>
+<li>10:20 AM – SOC analyst notified</li>
 </ul>
 
 </div>
 
 <footer>
 
-SOAR Incident Containment Engine | Week 2 Dashboard Placeholder with Threat Enrichment
+SOAR Incident Containment Engine | Week 2 Dashboard with Threat Enrichment
 
 </footer>
 
