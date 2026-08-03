@@ -25,6 +25,31 @@
             color: #0d47a1;
         }
 
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .summary-card h3 {
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+
+        .summary-card p {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
         .container {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -60,13 +85,33 @@
             color: white;
         }
 
+        .critical {
+            color: #b71c1c;
+            font-weight: bold;
+        }
+
         .high {
             color: #d32f2f;
             font-weight: bold;
         }
 
-        .pending {
+        .medium {
             color: #f57c00;
+            font-weight: bold;
+        }
+
+        .contained {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .investigating {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
+        .escalated {
+            color: #b71c1c;
             font-weight: bold;
         }
 
@@ -95,19 +140,41 @@
 
 <body>
 
-<h1>SOAR Case Dashboard (Placeholder)</h1>
+<h1>SOAR Incident Containment Dashboard</h1>
+
+<div class="summary">
+    <div class="summary-card">
+        <h3>Total Alerts</h3>
+        <p>18</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Critical</h3>
+        <p>2</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>High Severity</h3>
+        <p>5</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Resolved</h3>
+        <p>11</p>
+    </div>
+</div>
 
 <div class="container">
 
     <!-- Incoming Alerts -->
     <div class="card">
-        <h2>Incoming Alerts</h2>
+        <h2>Recent Security Alerts</h2>
 
         <table>
             <thead>
                 <tr>
                     <th>Alert ID</th>
-                    <th>Time Received</th>
+                    <th>Time</th>
                     <th>Source IP</th>
                     <th>Alert Type</th>
                     <th>Host</th>
@@ -124,17 +191,37 @@
                     <td>WEB-SRV-01</td>
                     <td class="high">High</td>
                 </tr>
+
+                <tr>
+                    <td>ALRT-002</td>
+                    <td>10:42 AM</td>
+                    <td>172.16.0.25</td>
+                    <td>Phishing Email</td>
+                    <td>MAIL-SRV-02</td>
+                    <td class="critical">Critical</td>
+                </tr>
+
+                <tr>
+                    <td>ALRT-003</td>
+                    <td>11:05 AM</td>
+                    <td>10.0.0.45</td>
+                    <td>Port Scan</td>
+                    <td>DB-SRV-01</td>
+                    <td class="medium">Medium</td>
+                </tr>
             </tbody>
         </table>
     </div>
 
     <!-- Action Summary -->
     <div class="card">
-        <h2>Containment Action</h2>
+        <h2>Containment Summary</h2>
 
-        <p><strong>Action Taken:</strong> Block IP</p>
-        <p><strong>Status:</strong> <span class="pending">Pending</span></p>
+        <p><strong>Current Action:</strong> Block Source IP</p>
+        <p><strong>Status:</strong> <span class="contained">Contained</span></p>
         <p><strong>Risk Score:</strong> 85 / 100</p>
+        <p><strong>Playbook:</strong> Brute Force Response v1</p>
+        <p><strong>Assigned Analyst:</strong> SOC L1</p>
     </div>
 
 </div>
@@ -142,18 +229,33 @@
 <br>
 
 <div class="card">
-    <h2>Action Timeline</h2>
+    <h2>Incident Timeline</h2>
 
     <ul>
         <li>10:15 AM - Alert received from SIEM</li>
-        <li>10:16 AM - Risk assessment initiated</li>
-        <li>10:17 AM - Containment action selected</li>
-        <li>10:18 AM - Waiting for backend integration</li>
+        <li>10:16 AM - Risk score calculated (85/100)</li>
+        <li>10:17 AM - Playbook selected automatically</li>
+        <li>10:18 AM - Source IP blocked by containment workflow</li>
+        <li>10:20 AM - Incident marked as contained and awaiting analyst review</li>
+    </ul>
+</div>
+
+<br>
+
+<div class="card">
+    <h2>Week 1 Dashboard Status</h2>
+
+    <ul>
+        <li>Alert monitoring layout completed</li>
+        <li>Sample dashboard data integrated</li>
+        <li>QA documentation prepared</li>
+        <li>Integration checklist completed</li>
+        <li>Ready for Week 2 backend data integration</li>
     </ul>
 </div>
 
 <footer>
-    SOAR Incident Containment Engine | Dashboard Placeholder (Week 1)
+    SOAR Incident Containment Engine | Week 1 Dashboard Prototype
 </footer>
 
 </body>
