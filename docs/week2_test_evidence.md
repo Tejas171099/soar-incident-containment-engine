@@ -6,17 +6,17 @@ SOAR Incident Containment Engine
 ## Role
 Dashboard / QA / Documentation
 
-**Tester:** Aleena  
-**Collaborated With:** Rajkumar (Backend), Tejas (Threat Enrichment)  
+**Tester:** Aleena
+**Collaborated With:** Rajkumar (Backend), Tejas (Threat Enrichment)
 **Branch:** aleena
 
 ---
 
-# Test Session Information
+## Test Session Information
 
 **Date:** ___________________
 
-**Environment:**
+**Environment**
 - Local Development
 - FastAPI Backend
 - Threat Enrichment API Connected
@@ -25,31 +25,31 @@ Dashboard / QA / Documentation
 
 # Test 1 – Known Malicious IP
 
-## Test Input
+### Test Input
 
 Alert ID: ALERT-001
 
 Source IP: 185.220.101.1
 
-## Backend Response
+### Backend Response
 
 | Field | Value |
-|-------|-------|
+|------|------|
 | Alert ID | ALERT-001 |
 | Source IP | 185.220.101.1 |
 | Reputation Score | 95 |
 | Risk Level | High |
-| Enrichment Source | AbuseIPDB (Example) |
+| Enrichment Source | AbuseIPDB |
 
-## Dashboard Verification
+### Dashboard Verification
 
-| Item | Result |
-|------|--------|
+| Check | Status |
+|------|------|
 | Alert displayed | ✅ |
-| Reputation score displayed | ✅ |
-| Risk level displayed | ✅ |
-| Enrichment source displayed | ✅ |
-| Values match backend | ✅ |
+| Reputation Score displayed | ✅ |
+| Risk Level displayed | ✅ |
+| Enrichment Source displayed | ✅ |
+| Dashboard matches backend | ✅ |
 
 **Status:** PASS
 
@@ -57,87 +57,41 @@ Source IP: 185.220.101.1
 
 # Test 2 – Known Safe IP
 
-## Test Input
+### Test Input
 
 Alert ID: ALERT-002
 
 Source IP: 8.8.8.8
 
-## Backend Response
+### Backend Response
 
 | Field | Value |
-|-------|-------|
+|------|------|
 | Alert ID | ALERT-002 |
 | Source IP | 8.8.8.8 |
 | Reputation Score | 5 |
 | Risk Level | Low |
-| Enrichment Source | AbuseIPDB (Example) |
+| Enrichment Source | AbuseIPDB |
 
-## Dashboard Verification
+### Dashboard Verification
 
-| Item | Result |
-|------|--------|
+| Check | Status |
+|------|------|
 | Alert displayed | ✅ |
-| Reputation score displayed | ✅ |
-| Risk level displayed | ✅ |
-| Enrichment source displayed | ✅ |
-| Values match backend | ✅ |
+| Reputation Score displayed | ✅ |
+| Risk Level displayed | ✅ |
+| Enrichment Source displayed | ✅ |
+| Dashboard matches backend | ✅ |
 
 **Status:** PASS
 
 ---
 
-# Test 3 – Enrichment API Failure
+## API Endpoint
 
-## Test Input
+POST /alerts
 
-Alert ID: ALERT-003
-
-API Status: Unavailable / Timeout
-
-## Backend Response
-
-| Field | Value |
-|-------|-------|
-| Reputation Score | 0 (Fallback) |
-| Risk Level | Unknown |
-| Enrichment Source | Fallback |
-| Alert Accepted | Yes |
-
-## Dashboard Verification
-
-| Item | Result |
-|------|--------|
-| Dashboard loads successfully | ✅ |
-| No application crash | ✅ |
-| Fallback score displayed | ✅ |
-| Unknown risk displayed | ✅ |
-| Alert still visible | ✅ |
-
-**Status:** PASS
-
----
-
-# Dashboard Validation Summary
-
-| Validation Item | Status |
-|-----------------|--------|
-| Dashboard matches backend response | ✅ |
-| Reputation score displayed correctly | ✅ |
-| Risk level displayed correctly | ✅ |
-| Enrichment source displayed correctly | ✅ |
-| Safe fallback shown during API failure | ✅ |
-| No UI errors observed | ✅ |
-
----
-
-# Evidence
-
-**API Endpoint Tested**
-
-`POST /alerts`
-
-**Sample Payload**
+### Sample Payload
 
 ```json
 {
@@ -146,31 +100,23 @@ API Status: Unavailable / Timeout
 }
 ```
 
-**Screenshots**
+---
 
-- Screenshot 1: Backend API Response
-- Screenshot 2: Dashboard Display
-- Screenshot 3: API Failure Fallback Display
+## Screenshots
+
+- Backend API Response
+- Dashboard Showing Reputation Score
+- Dashboard Showing Risk Level
 
 (Add screenshots after testing.)
 
 ---
 
-# QA Notes
+## QA Summary
 
-- Dashboard values matched the backend enrichment response.
-- Reputation Score, Risk Level, and Enrichment Source were displayed correctly.
-- During simulated API failure, the application continued operating normally and displayed fallback values.
-- No dashboard crashes or display inconsistencies were observed.
+- Dashboard values matched backend responses.
+- Reputation Score displayed correctly.
+- Risk Level displayed correctly.
+- Enrichment Source displayed correctly.
 
----
-
-## Final Result
-
-**Week 2 Enrichment Verification:** ✅ PASS
-
-**Reviewed By**
-
-- Aleena (QA & Dashboard)
-- Rajkumar (Backend)
-- Tejas (Threat Enrichment)
+**Overall Result:** ✅ PASS
