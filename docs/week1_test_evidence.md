@@ -1,3 +1,44 @@
+ branch/merin
+# Week 1 Test Evidence
+
+*Date:* 25-07-2026
+
+*Test:* POST /alerts
+
+## Payload Used
+
+json
+{
+  "id": "ALERT-001",
+  "time": "2026-07-25T12:00:00Z",
+  "src_ip": "192.168.1.100",
+  "type": "Malware",
+  "host": "PC-01",
+  "severity": "High"
+}
+
+
+## Expected Result
+
+- HTTP Status Code: 200
+- Alert should be received successfully.
+
+## Actual Result
+
+- HTTP Status Code: 200
+
+json
+{
+  "status": "received",
+  "alert_id": "ALERT-001",
+  "message": "Alert received successfully"
+}
+
+
+## Test Status
+
+*PASS ✅*
+
 branch/rajkumar
 # Week 1 Test Evidence
 
@@ -83,7 +124,7 @@ Example Response
 PASS
 
 The API successfully completed all required Week 1 functionality, including validation, normalization, enrichment, and response generation.
-=======
+
 # Week 1 Test Evidence — Tejas (Threat Intelligence / Playbook Module)
 
 ## Test 1: Mock enrichment with known bad IP
@@ -206,4 +247,5 @@ All three mock enrichment and playbook decision test cases passed successfully. 
 - Replace mock enrichment with real API-based enrichment (from Rajkumar's ingestion module).
 - Re-verify risk thresholds against real reputation score ranges.
 - Add more playbook action types (isolate_host, escalate_to_analyst).
+ main
  main
