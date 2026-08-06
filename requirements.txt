@@ -1,5 +1,1 @@
-fastapi
-uvicorn
-requests
-pydantic
-pytest
+https://github.com/Tejas171099/soar-incident-containment-engine/pull/14/conflict?name=requirements.txt&base_oid=b513cb996da0cbabb73804ebdb37c9c03e9a102b&head_oid=63a66df07b359431c8b09ee2843782905a7ad610
