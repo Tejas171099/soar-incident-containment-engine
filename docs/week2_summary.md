@@ -1,3 +1,8 @@
+ branch/tejas
+# Week 2 Summary
+
+This week I updated the playbook logic to work with real enrichment data from Rajkumar's threat lookup pipeline. I also reviewed risk scoring thresholds, expanded action handling, and verified behavior with test cases for bad, safe, and fallback alerts.
+
 # Week 2 Completion Summary
 
 ## Completed Tasks
@@ -43,3 +48,4 @@
 ## Repository Status
 
 The Week 2 documentation has been completed and the repository is ready for the Mid Review.
+ main

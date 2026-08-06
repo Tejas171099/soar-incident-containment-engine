@@ -31,3 +31,33 @@ if __name__ == "__main__":
 
     result = process_alert(sample_alert)
     print(result)
+def decide_risk(score: int) -> str:
+    if score >= 75:
+        return "high"
+    elif score >= 30:
+        return "medium"
+    return "low"
+
+def choose_action(risk_level: str) -> str:
+    if risk_level == "high":
+        return "block_ip"
+    elif risk_level == "medium":
+        return "manual_review"
+    elif risk_level == "low":
+        return "no_action"
+    return "escalate_to_analyst"
+
+
+def process_enriched_alert(enriched_alert: dict) -> dict:
+    score = enriched_alert.get("reputation_score", 0)
+    risk_level = decide_risk(score)
+    action = choose_action(risk_level)
+
+    return {
+        "alert_id": enriched_alert.get("alert_id"),
+        "source_ip": enriched_alert.get("source_ip") or enriched_alert.get("ip"),
+        "reputation_score": score,
+        "risk_level": risk_level,
+        "recommended_action": action,
+        "action_status": "pending"
+    }

@@ -1,3 +1,24 @@
+ branch/tejas
+# Week 2 Test Evidence
+
+## Test 1: High-risk alert
+Input score: 90
+Expected risk: high
+Expected action: block_ip
+Actual result: high / block_ip
+
+## Test 2: Medium-risk alert
+Input score: 50
+Expected risk: medium
+Expected action: manual_review
+Actual result: medium / manual_review
+
+## Test 3: Low-risk alert
+Input score: 0
+Expected risk: low
+Expected action: no_action
+Actual result: low / no_action
+
  branch/merin
 # Week 2 End-to-End Enrichment Test
 
@@ -150,4 +171,5 @@ All planned Week 2 tests completed successfully.
 * Application logging working.
 
 The enrichment pipeline is ready for integration with a live threat intelligence service (such as AbuseIPDB or VirusTotal) in the next stage of development.
+ main
  main
