@@ -1,0 +1,17 @@
+# Week 2 GitHub Issues
+
+## Issue 1
+Title: Integrate AbuseIPDB lookup
+Assigned to: Rajkumar
+
+## Issue 2
+Title: Update playbook engine for real data
+Assigned to: Tejas
+
+## Issue 3
+Title: Update dashboard with risk display
+Assigned to: Aleena
+
+## Issue 4
+Title: Verify Week 2 enrichment integration end-to-end
+Assigned to: Merin
