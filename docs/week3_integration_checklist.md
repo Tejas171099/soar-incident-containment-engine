@@ -1,7 +1,9 @@
 # Week 3 Integration Checklist
 
-- [ ] Alert ingestion verified
-- [ ] Threat enrichment verified
-- [ ] Playbook execution verified
-- [ ] Dashboard update verified
-- [ ] End-to-end workflow verified
+| Component | Status | Verified By | Notes |
+|-----------|--------|-------------|-------|
+| Alert Ingestion | Pending | | |
+| Threat Enrichment | Pending | | |
+| Playbook Engine | Pending | | |
+| Dashboard | Pending | | |
+| End-to-End Flow | Pending | | |
