@@ -34,3 +34,34 @@
 - [x] Field mapping documented
 - [x] Naming mismatch documented
 - [ ] Full end-to-end integration test
+
+## Dashboard Integration
+
+| Field | Dashboard Status | Notes |
+|---|---|---|
+| Alert ID | Confirmed | Visible on dashboard |
+| Time | Confirmed | Visible on dashboard |
+| Source IP | Confirmed | Visible on dashboard |
+| Alert Type | Confirmed | Visible on dashboard |
+| Host | Confirmed | Visible on dashboard |
+| Severity | Confirmed | Visible on dashboard |
+| Reputation Score | Confirmed | Visible on dashboard |
+| Risk Level | Confirmed | Visible on dashboard |
+| Recommended Action | Confirmed | Visible on dashboard |
+| Enrichment Source | Confirmed | Visible on dashboard |
+| Action Status | Gap | Not visible in the reviewed dashboard table |
+
+### Dashboard Evidence
+
+Aleena's branch/aleena dashboard implementation was reviewed.
+The dashboard table displays Alert ID, Time, Source IP, Alert Type,
+Host, Severity, Reputation Score, Risk Level, Recommended Action,
+and Enrichment Source.
+
+Action Status was not visible in the reviewed dashboard table and
+requires follow-up confirmation.
+
+### Follow-up Gap
+
+- Confirm with Aleena/Tejas whether action_status should be displayed on the dashboard.
+
