@@ -159,3 +159,5 @@ If enrichment fails because of a timeout, network issue, or API error, the API r
 * Threat enrichment is triggered automatically after normalization.
 * API keys are stored securely using environment variables.
 * The API continues processing even if the external threat intelligence provider is unavailable.
+
+---
