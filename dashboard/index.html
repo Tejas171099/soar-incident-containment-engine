@@ -1,249 +1,504 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOAR Incident Containment Engine Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
+    <title>SOAR Incident Containment Engine</title>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
+    <style>
 
-body{
-    background:#f4f6f9;
-    padding:30px;
-    color:#333;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-h1{
-    text-align:center;
-    color:#0d47a1;
-    margin-bottom:25px;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
 
-.summary{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:15px;
-    margin-bottom:25px;
-}
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
 
-.card{
-    background:#fff;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
-    text-align:center;
-}
+        h1 {
+            margin-bottom: 5px;
+        }
 
-.card h3{
-    color:#1565c0;
-    margin-bottom:10px;
-}
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
 
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:#fff;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
-}
+        /* Summary */
 
-th,td{
-    border:1px solid #ddd;
-    padding:10px;
-    text-align:center;
-}
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
 
-th{
-    background:#1976d2;
-    color:#fff;
-}
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
 
-/* Severity */
+        .summary-card h3 {
+            margin: 0 0 10px;
+            font-size: 15px;
+            color: #666;
+        }
 
-.severity-high{
-    color:#d32f2f;
-    font-weight:bold;
-}
+        .summary-card p {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
 
-.severity-medium{
-    color:#f57c00;
-    font-weight:bold;
-}
+        /* Alert Card */
 
-.severity-low{
-    color:#388e3c;
-    font-weight:bold;
-}
+        .alert-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
 
-/* Risk Level */
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-.high{
-    background:#ffebee;
-    color:#c62828;
-    font-weight:bold;
-}
+        .alert-id {
+            font-size: 18px;
+            font-weight: bold;
+        }
 
-.medium{
-    background:#fff8e1;
-    color:#f9a825;
-    font-weight:bold;
-}
+        .field {
+            margin: 10px 0;
+        }
 
-.low{
-    background:#e8f5e9;
-    color:#2e7d32;
-    font-weight:bold;
-}
+        .label {
+            font-weight: bold;
+        }
 
-.timeline{
-    margin-top:25px;
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
-}
+        /* Risk */
 
-.timeline h2{
-    color:#1565c0;
-    margin-bottom:15px;
-}
+        .risk {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
 
-.timeline ul{
-    padding-left:20px;
-}
+        .risk-high {
+            color: #b00020;
+            background: #ffe5e5;
+        }
 
-.timeline li{
-    margin-bottom:10px;
-}
+        .risk-medium {
+            color: #b35c00;
+            background: #fff0d6;
+        }
 
-footer{
-    margin-top:25px;
-    text-align:center;
-    color:#666;
-}
+        .risk-low {
+            color: #187a35;
+            background: #e3f7e8;
+        }
 
-</style>
+        /* Action */
 
+        .action {
+            font-weight: bold;
+        }
+
+        /* Status */
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #b35c00;
+            background: #fff0d6;
+        }
+
+        .status-progress {
+            color: #005bbb;
+            background: #e4f0ff;
+        }
+
+        .status-completed {
+            color: #187a35;
+            background: #e3f7e8;
+        }
+
+        .status-failed {
+            color: #b00020;
+            background: #ffe5e5;
+        }
+
+        .section-title {
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 800px) {
+
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
 </head>
+
 
 <body>
 
-<h1>SOAR Incident Containment Dashboard</h1>
+<div class="container">
 
-<div class="summary">
+    <h1>SOAR Incident Containment Engine</h1>
 
-<div class="card">
-<h3>Total Alerts</h3>
-<h2>18</h2>
+    <p class="subtitle">
+        Incident Monitoring Dashboard – Week 1, Week 2 & Week 3
+    </p>
+
+
+    <!-- ========================= -->
+    <!-- SUMMARY -->
+    <!-- ========================= -->
+
+    <div class="summary">
+
+        <div class="summary-card">
+            <h3>Total Alerts</h3>
+            <p>3</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>High Risk</h3>
+            <p>1</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Actions Pending</h3>
+            <p>1</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Actions Completed</h3>
+            <p>1</p>
+        </div>
+
+    </div>
+
+
+    <h2 class="section-title">Incident Alerts</h2>
+
+
+    <!-- ========================= -->
+    <!-- ALERT 001 -->
+    <!-- ========================= -->
+
+    <div class="alert-card">
+
+        <div class="alert-header">
+
+            <div class="alert-id">
+                Alert ID: ALT-001
+            </div>
+
+            <span class="risk risk-high">
+                HIGH RISK
+            </span>
+
+        </div>
+
+
+        <!-- WEEK 1 -->
+
+        <div class="field">
+            <span class="label">Time:</span>
+            2026-08-11 10:00
+        </div>
+
+        <div class="field">
+            <span class="label">Source IP:</span>
+            192.168.1.100
+        </div>
+
+        <div class="field">
+            <span class="label">Alert Type:</span>
+            Suspicious Login
+        </div>
+
+        <div class="field">
+            <span class="label">Host:</span>
+            workstation-01
+        </div>
+
+        <div class="field">
+            <span class="label">Severity:</span>
+            High
+        </div>
+
+
+        <!-- WEEK 2 -->
+
+        <div class="field">
+            <span class="label">Reputation Score:</span>
+            90
+        </div>
+
+        <div class="field">
+            <span class="label">Risk Level:</span>
+
+            <span class="risk risk-high">
+                High
+            </span>
+
+        </div>
+
+        <div class="field">
+            <span class="label">Enrichment Source:</span>
+            Threat Intelligence API
+        </div>
+
+
+        <!-- WEEK 3 -->
+
+        <div class="field">
+            <span class="label">Recommended Action:</span>
+
+            <span class="action">
+                Block Source IP
+            </span>
+
+        </div>
+
+        <div class="field">
+            <span class="label">Action Status:</span>
+
+            <span class="status status-pending">
+                Pending
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- ALERT 002 -->
+    <!-- ========================= -->
+
+    <div class="alert-card">
+
+        <div class="alert-header">
+
+            <div class="alert-id">
+                Alert ID: ALT-002
+            </div>
+
+            <span class="risk risk-medium">
+                MEDIUM RISK
+            </span>
+
+        </div>
+
+
+        <!-- WEEK 1 -->
+
+        <div class="field">
+            <span class="label">Time:</span>
+            2026-08-11 10:15
+        </div>
+
+        <div class="field">
+            <span class="label">Source IP:</span>
+            10.10.10.25
+        </div>
+
+        <div class="field">
+            <span class="label">Alert Type:</span>
+            Port Scan
+        </div>
+
+        <div class="field">
+            <span class="label">Host:</span>
+            server-02
+        </div>
+
+        <div class="field">
+            <span class="label">Severity:</span>
+            Medium
+        </div>
+
+
+        <!-- WEEK 2 -->
+
+        <div class="field">
+            <span class="label">Reputation Score:</span>
+            60
+        </div>
+
+        <div class="field">
+            <span class="label">Risk Level:</span>
+
+            <span class="risk risk-medium">
+                Medium
+            </span>
+
+        </div>
+
+        <div class="field">
+            <span class="label">Enrichment Source:</span>
+            Threat Intelligence API
+        </div>
+
+
+        <!-- WEEK 3 -->
+
+        <div class="field">
+            <span class="label">Recommended Action:</span>
+
+            <span class="action">
+                Investigate Source
+            </span>
+
+        </div>
+
+        <div class="field">
+            <span class="label">Action Status:</span>
+
+            <span class="status status-progress">
+                In Progress
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- ALERT 003 -->
+    <!-- ========================= -->
+
+    <div class="alert-card">
+
+        <div class="alert-header">
+
+            <div class="alert-id">
+                Alert ID: ALT-003
+            </div>
+
+            <span class="risk risk-low">
+                LOW RISK
+            </span>
+
+        </div>
+
+
+        <!-- WEEK 1 -->
+
+        <div class="field">
+            <span class="label">Time:</span>
+            2026-08-11 10:30
+        </div>
+
+        <div class="field">
+            <span class="label">Source IP:</span>
+            10.10.10.50
+        </div>
+
+        <div class="field">
+            <span class="label">Alert Type:</span>
+            Normal Login
+        </div>
+
+        <div class="field">
+            <span class="label">Host:</span>
+            workstation-05
+        </div>
+
+        <div class="field">
+            <span class="label">Severity:</span>
+            Low
+        </div>
+
+
+        <!-- WEEK 2 -->
+
+        <div class="field">
+            <span class="label">Reputation Score:</span>
+            10
+        </div>
+
+        <div class="field">
+            <span class="label">Risk Level:</span>
+
+            <span class="risk risk-low">
+                Low
+            </span>
+
+        </div>
+
+        <div class="field">
+            <span class="label">Enrichment Source:</span>
+            Threat Intelligence API
+        </div>
+
+
+        <!-- WEEK 3 -->
+
+        <div class="field">
+            <span class="label">Recommended Action:</span>
+
+            <span class="action">
+                Monitor
+            </span>
+
+        </div>
+
+        <div class="field">
+            <span class="label">Action Status:</span>
+
+            <span class="status status-completed">
+                Completed
+            </span>
+
+        </div>
+
+    </div>
+
 </div>
-
-<div class="card">
-<h3>Critical Alerts</h3>
-<h2>2</h2>
-</div>
-
-<div class="card">
-<h3>High Risk Alerts</h3>
-<h2>5</h2>
-</div>
-
-<div class="card">
-<h3>Resolved Alerts</h3>
-<h2>11</h2>
-</div>
-
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-<th>Alert ID</th>
-<th>Time</th>
-<th>Source IP</th>
-<th>Alert Type</th>
-<th>Host</th>
-<th>Severity</th>
-<th>Reputation Score</th>
-<th>Risk Level</th>
-<th>Recommended Action</th>
-<th>Enrichment Source</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-<td>ALRT-001</td>
-<td>10:15 AM</td>
-<td>192.168.1.50</td>
-<td>Brute Force</td>
-<td>WEB-SRV-01</td>
-<td class="severity-high">High</td>
-<td>92</td>
-<td class="high">High Risk</td>
-<td>Block Source IP</td>
-<td>VirusTotal</td>
-</tr>
-
-<tr>
-<td>ALRT-002</td>
-<td>10:34 AM</td>
-<td>172.16.10.20</td>
-<td>Port Scan</td>
-<td>APP-SRV-02</td>
-<td class="severity-medium">Medium</td>
-<td>71</td>
-<td class="medium">Medium Risk</td>
-<td>Monitor Activity</td>
-<td>AbuseIPDB</td>
-</tr>
-
-<tr>
-<td>ALRT-003</td>
-<td>11:02 AM</td>
-<td>10.0.0.18</td>
-<td>Malware Detection</td>
-<td>CLIENT-08</td>
-<td class="severity-low">Low</td>
-<td>25</td>
-<td class="low">Low Risk</td>
-<td>Continue Monitoring</td>
-<td>VirusTotal</td>
-</tr>
-
-</tbody>
-
-</table>
-
-<div class="timeline">
-
-<h2>Incident Timeline</h2>
-
-<ul>
-<li>10:15 AM – Alert received from SIEM</li>
-<li>10:16 AM – Threat enrichment completed</li>
-<li>10:17 AM – Reputation score calculated</li>
-<li>10:18 AM – Risk level assigned</li>
-<li>10:19 AM – Recommended action generated</li>
-<li>10:20 AM – SOC analyst notified</li>
-</ul>
-
-</div>
-
-<footer>
-
-SOAR Incident Containment Engine | Week 2 Dashboard with Threat Enrichment
-
-</footer>
 
 </body>
+
 </html>
