@@ -49,19 +49,18 @@
 | Risk Level | Confirmed | Visible on dashboard |
 | Recommended Action | Confirmed | Visible on dashboard |
 | Enrichment Source | Confirmed | Visible on dashboard |
-| Action Status | Gap | Not visible in the reviewed dashboard table |
+| Action Status | confirmed | visible in dashboard |
 
 ### Dashboard Evidence
 
 Aleena's branch/aleena dashboard implementation was reviewed.
+
 The dashboard table displays Alert ID, Time, Source IP, Alert Type,
 Host, Severity, Reputation Score, Risk Level, Recommended Action,
-and Enrichment Source.
+Enrichment Source, and Action Status.
 
-Action Status was not visible in the reviewed dashboard table and
-requires follow-up confirmation.
+Action Status was verified as visible in the dashboard
 
 ### Follow-up Gap
 
 - Confirm with Aleena/Tejas whether action_status should be displayed on the dashboard.
-
