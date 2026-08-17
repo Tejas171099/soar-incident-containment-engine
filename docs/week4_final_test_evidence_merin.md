@@ -16,6 +16,7 @@
 
 ### 2. Enrichment Result
 
+```json
 {
   "reputation_score": 92,
   "source": "AbuseIPDB"
@@ -23,6 +24,7 @@
 
 ### 3. Playbook Output
 
+```json
 {
   "risk_level": "high",
   "recommended_action": "block_ip",
