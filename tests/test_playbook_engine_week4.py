@@ -14,6 +14,7 @@ def test_low_risk_alert_has_no_action():
     assert result["recommended_action"] == "no_action"
 
 
+
 def test_high_risk_malware_isolates_host():
     alert = {
         "alert_id": "ALT-2002",
