@@ -2,30 +2,33 @@
 
 ## Overview
 
-Week 4 focused on final integration review, coordination between team members, documentation cleanup, and final end-to-end verification of the SOAR Incident Containment Engine.
+Week 4 focused on final integration verification, end-to-end testing, dashboard verification, and final project documentation.
 
 ## Member Updates
 
 ### Rajkumar
 
-Worked on the API and enrichment flow, including reputation information required by downstream components.
+Completed the enrichment integration and provided reputation data and source information for the end-to-end flow.
 
 ### Tejas
 
-Worked on the playbook and decision flow using enrichment information and producing risk and action-related outputs.
+Completed the playbook integration and verified the playbook output including risk level, recommended action, and action status.
 
 ### Aleena
 
-Worked on dashboard integration and displaying the final results from the backend flow.
+Completed the dashboard integration and verified the required fields and final output on the dashboard.
 
 ### Merin
 
-Coordinated the Week 4 integration review, tracked remaining issues, reviewed field flow, maintained documentation, and prepared final end-to-end test evidence.
+Coordinated the Week 4 activities, reviewed integration across the project components, documented the final test evidence, and prepared the final integration review and summary.
 
 ## Remaining Issues
 
-Any remaining integration or documentation issues are tracked in the Week 4 Issues Overview.
+No major integration issues were identified during the final review.
 
 ## Decisions
 
-The final integration review uses the agreed field flow between ingestion, enrichment, playbook processing, and dashboard display.
+- Final integration was reviewed across ingestion, enrichment, playbook, and dashboard.
+- Required fields were checked during the end-to-end verification.
+- Week 4 documentation was prepared on branch/merin for final project review.
+
