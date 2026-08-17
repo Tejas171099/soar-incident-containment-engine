@@ -4,12 +4,12 @@
 
 | Field | Present in ingestion | Present in enrichment | Present in playbook output | Present on dashboard | Final status |
 |---|---|---|---|---|---|
-| alert_id | Yes | Yes | Yes | Yes | OK / Issue |
-| source_ip | Yes | Yes | Yes | Yes | OK / Issue |
-| reputation_score | No | Yes | Yes | Yes | OK / Issue |
-| risk_level | No | No | Yes | Yes | OK / Issue |
-| recommended_action | No | No | Yes | Yes | OK / Issue |
-| action_status | No | No | Yes | Yes | OK / Issue |
+| alert_id | Yes | Yes | Yes | Yes | OK |
+| source_ip | Yes | Yes | Yes | Yes | OK |
+| reputation_score | No | Yes | Yes | Yes | OK |
+| risk_level | No | No | Yes | Yes | OK |
+| recommended_action | No | No | Yes | Yes | OK |
+| action_status | No | No | Yes | Yes | OK |
 
 ## Review Notes
 
