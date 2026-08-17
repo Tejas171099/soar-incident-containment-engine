@@ -1,37 +1,61 @@
-# Week 4 Final End-to-End Test Evidence
+# Week 4 Final Test Evidence – Merin
 
-## Test 1 – End-to-End Alert Processing
+## 1. Ingestion Result
 
-### 1. Input Alert
+The alert was successfully received and normalized through the /alerts endpoint.
 
-```json
+Test alert:
+
+json
 {
-  "id": "A123",
-  "time": "2026-07-21T10:00:00Z",
-  "src_ip": "203.0.113.5",
-  "type": "brute_force",
-  "host": "web-server-01",
-  "severity": "high"
+  "id": "ALERT-001",
+  "time": "2026-07-25T12:00:00Z",
+  "src_ip": "192.168.1.100",
+  "type": "Malware",
+  "host": "PC-01",
+  "severity": "High"
 }
 
-### 2. Enrichment Result
 
-```json
+API response:
+
+- HTTP Status: 200
+- Status: received
+- Alert ID: ALERT-001
+- Source IP: 192.168.1.100
+- Alert Type: Malware
+- Target Host: PC-01
+- Severity: High
+- Message: Alert normalized successfully
+
+This confirms successful alert ingestion and normalization.
+
+<img width="1599" height="899" alt="image" src="https://github.com/user-attachments/assets/dd639613-bdbb-44bb-9d25-bb36009c59f4" />
+
+## 2. Enrichment Result
+
+json
 {
   "reputation_score": 92,
   "source": "AbuseIPDB"
 }
 
-### 3. Playbook Output
 
-```json
+The alert was successfully enriched using AbuseIPDB.
+
+## 3. Playbook Output
+
+json
 {
   "risk_level": "high",
   "recommended_action": "block_ip",
   "action_status": "completed"
 }
 
-### 4. Dashboard Result
+
+The playbook successfully processed the enriched alert and generated the recommended action.
+
+## 4. Dashboard Result
 
 The following fields were checked on the dashboard:
 
@@ -42,10 +66,14 @@ The following fields were checked on the dashboard:
 - recommended_action
 - action_status
 
-### 5. Test Status
+All required final fields were verified on the dashboard.
 
-IN PROGRESS
+## 5. Final Test Status
 
-### 6. Notes
+PASS
 
-The end-to-end test is being performed to verify the flow from alert ingestion through enrichment and playbook processing to the dashboard.
+## 6. Conclusion
+
+The end-to-end flow was verified from alert ingestion through enrichment and playbook processing to the final dashboard output.
+
+The final test confirmed that the required alert data and processing results were successfully passed through the system.
