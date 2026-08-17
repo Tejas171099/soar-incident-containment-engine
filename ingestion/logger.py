@@ -1,33 +1,27 @@
 import logging
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s"
-)
-
-logger = logging.getLogger("SOAR-Ingestion")
+import sys
 
 
-def log_alert_received(alert_id: str, source_ip: str):
-    logger.info(
-        f"[ALERT_RECEIVED] AlertID={alert_id} SourceIP={source_ip}"
+def setup_logger() -> logging.Logger:
+    """
+    Configure application-wide logging for the SOAR enrichment service.
+    """
+
+    logger = logging.getLogger("soar")
+
+    if logger.handlers:
+        return logger
+
+    logger.setLevel(logging.INFO)
+
+    handler = logging.StreamHandler(sys.stdout)
+
+    formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
     )
 
+    handler.setFormatter(formatter)
 
-def log_enrichment_started(source_ip: str):
-    logger.info(
-        f"[ENRICHMENT_STARTED] SourceIP={source_ip}"
-    )
+    logger.addHandler(handler)
 
-
-def log_enrichment_completed(source_ip: str, reputation_score: int):
-    logger.info(
-        f"[ENRICHMENT_COMPLETED] SourceIP={source_ip} ReputationScore={reputation_score}"
-    )
-
-
-def log_enrichment_failed(source_ip: str, reason: str):
-    logger.error(
-        f"[ENRICHMENT_FAILED] SourceIP={source_ip} Reason={reason}"
-    )
+    return logger
