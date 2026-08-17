@@ -1,63 +1,42 @@
-from playbooks.enrichment import enrich_ip
 from playbooks.scoring import decide_risk
 from playbooks.actions import choose_action
 
 
-def process_alert(alert: dict) -> dict:
-    ip = alert.get("source_ip") or alert.get("src_ip")
-
-    enrichment_result = enrich_ip(ip)
-    risk_level = decide_risk(enrichment_result["reputation_score"])
-    action = choose_action(risk_level)
-
-    return {
-        "alert_id": alert.get("id") or alert.get("alert_id"),
-        "source_ip": ip,
-        "reputation_score": enrichment_result["reputation_score"],
-        "risk_level": risk_level,
-        "recommended_action": action,
-        "action_status": "pending"
-    }
-
-
-if __name__ == "__main__":
-    sample_alert = {
-        "id": "A123",
-        "source_ip": "203.0.113.5",
-        "type": "brute_force",
-        "host": "web-server-01",
-        "severity": "high"
-    }
-
-    result = process_alert(sample_alert)
-    print(result)
-def decide_risk(score: int) -> str:
-    if score >= 75:
-        return "high"
-    elif score >= 30:
-        return "medium"
-    return "low"
-
-def choose_action(risk_level: str) -> str:
-    if risk_level == "high":
-        return "block_ip"
-    elif risk_level == "medium":
-        return "manual_review"
-    elif risk_level == "low":
-        return "no_action"
-    return "escalate_to_analyst"
-
-
 def process_enriched_alert(enriched_alert: dict) -> dict:
+    alert_id = enriched_alert.get("alert_id", "unknown")
+    source_ip = enriched_alert.get("source_ip", "unknown")
+    alert_type = enriched_alert.get("alert_type", "unknown")
     score = enriched_alert.get("reputation_score", 0)
+    source = enriched_alert.get("source", "lookup_failed")
+
+    if source == "lookup_failed":
+        return {
+            "alert_id": alert_id,
+            "source_ip": source_ip,
+            "alert_type": alert_type,
+            "reputation_score": 0,
+            "risk_level": "unknown",
+            "recommended_action": "manual_review",
+            "action_status": "pending",
+            "decision_reason": "Threat enrichment lookup failed, so analyst review is required."
+        }
+
     risk_level = decide_risk(score)
-    action = choose_action(risk_level)
+    recommended_action = choose_action(risk_level)
+
+    if alert_type == "malware_detection" and risk_level == "high":
+        recommended_action = "isolate_host"
+
+    if alert_type == "suspicious_login" and risk_level == "high":
+        recommended_action = "manual_review"
 
     return {
-        "alert_id": enriched_alert.get("alert_id"),
-        "source_ip": enriched_alert.get("source_ip") or enriched_alert.get("ip"),
+        "alert_id": alert_id,
+        "source_ip": source_ip,
+        "alert_type": alert_type,
         "reputation_score": score,
         "risk_level": risk_level,
-        "recommended_action": action,
-        "action_status": "pending"
+        "recommended_action": recommended_action,
+        "action_status": "pending",
+        "decision_reason": "Decision created from alert type and enrichment reputation score."
     }
