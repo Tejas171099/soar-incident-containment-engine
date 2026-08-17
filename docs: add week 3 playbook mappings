@@ -1,0 +1,6 @@
+# Week 3 Summary – Tejas
+
+- Extended playbook engine to support brute_force, malware_detection, and suspicious_login alert types.
+- Added type-specific actions: block_ip, isolate_host, manual_review, no_action.
+- Added safe fallback: failed enrichment always routes to manual_review.
+- Added automated tests for all major decision paths.
