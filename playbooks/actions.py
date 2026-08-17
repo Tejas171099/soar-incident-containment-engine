@@ -5,4 +5,4 @@ def choose_action(risk_level: str) -> str:
         return "manual_review"
     elif risk_level == "low":
         return "no_action"
-    return "escalate_to_analyst"
+    return "manual_review"
