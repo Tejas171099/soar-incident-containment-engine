@@ -1,153 +1,253 @@
-import os
+"""
+Threat intelligence lookup module.
+
+This module queries AbuseIPDB for IP reputation information.
+
+Week 4 requirements:
+- Handle missing API key safely.
+- Handle timeout errors.
+- Handle network errors.
+- Handle HTTP errors.
+- Handle malformed/unexpected provider responses.
+- Never allow enrichment failure to crash the FastAPI service.
+- Return safe defaults when enrichment fails.
+"""
+
 import logging
+import os
+from typing import Any, Dict
+
 import requests
 
 
-logger = logging.getLogger(__name__)
+# Use the same logger configured by ingestion/logger.py
+logger = logging.getLogger("soar")
+
 
 ABUSEIPDB_URL = "https://api.abuseipdb.com/api/v2/check"
 
-ABUSEIPDB_API_KEY = os.getenv("ABUSEIPDB_API_KEY")
 
-
-def check_ip_reputation(ip: str) -> dict:
+def check_ip_reputation(ip: str) -> Dict[str, Any]:
     """
-    Look up IP reputation from AbuseIPDB.
+    Check an IP address against AbuseIPDB.
 
-    The function always returns a dictionary containing:
-    - reputation_score
-    - source
+    Returns a dictionary containing enrichment information.
 
-    If the external lookup fails, safe default values are returned.
-    """
+    Successful lookup example:
 
-    # Safe default result
-    safe_result = {
-        "ip": ip,
+    {
+        "ip": "8.8.8.8",
+        "reputation_score": 0,
+        "source": "AbuseIPDB",
+        "country": "US",
+        "isp": "Google LLC",
+        "asn": "15169"
+    }
+
+    Failure example:
+
+    {
+        "ip": "8.8.8.8",
         "reputation_score": 0,
         "source": "lookup_failed",
-        "country": "Unknown",
-        "isp": "Unknown",
-        "asn": "Unknown"
+        "reason": "missing_api_key"
     }
+    """
 
-    # Check API key before making the request
-    if not ABUSEIPDB_API_KEY:
-        logger.warning(
-            "AbuseIPDB API key is not configured"
-        )
-        return safe_result
+    # ---------------------------------------------------------
+    # 1. Read API key from environment
+    # ---------------------------------------------------------
+    api_key = os.getenv("ABUSEIPDB_API_KEY")
 
-    headers = {
-        "Key": ABUSEIPDB_API_KEY,
-        "Accept": "application/json"
-    }
-
-    params = {
-        "ipAddress": ip,
-        "maxAgeInDays": 90
-    }
-
-    try:
-
-        # 1. External API request with timeout
-        response = requests.get(
-            ABUSEIPDB_URL,
-            headers=headers,
-            params=params,
-            timeout=5
-        )
-
-        # 2. Check HTTP status
-        if response.status_code != 200:
-
-            logger.warning(
-                "Enrichment failed for IP %s: HTTP status %s",
-                ip,
-                response.status_code
-            )
-
-            return safe_result
-
-        # 3. Parse JSON safely
-        data = response.json()
-
-        abuse_data = data.get("data", {})
-
-        score = abuse_data.get(
-            "abuseConfidenceScore",
-            0
-        )
-
-        country = abuse_data.get(
-            "countryCode",
-            "Unknown"
-        )
-
-        isp = abuse_data.get(
-            "isp",
-            "Unknown"
-        )
-
-        asn = abuse_data.get(
-            "asn",
-            "Unknown"
-        )
-
-        logger.info(
-            "Enrichment completed for IP %s with score %s",
+    if not api_key:
+        logger.error(
+            "ENRICHMENT_FAILURE ip=%s reason=missing_api_key",
             ip,
-            score
         )
 
         return {
             "ip": ip,
-            "reputation_score": int(score),
-            "source": "abuseipdb",
-            "country": country,
-            "isp": isp,
-            "asn": asn
+            "reputation_score": 0,
+            "source": "lookup_failed",
+            "reason": "missing_api_key",
         }
 
-    # 4. Timeout handling
-    except requests.Timeout:
+    # ---------------------------------------------------------
+    # 2. Prepare AbuseIPDB request
+    # ---------------------------------------------------------
+    headers = {
+        "Accept": "application/json",
+        "Key": api_key,
+    }
 
-        logger.error(
-            "Enrichment timeout for IP %s",
-            ip
+    params = {
+        "ipAddress": ip,
+        "maxAgeInDays": 90,
+    }
+
+    logger.info(
+        "ENRICHMENT_START ip=%s provider=AbuseIPDB",
+        ip,
+    )
+
+    # ---------------------------------------------------------
+    # 3. Perform external API request
+    # ---------------------------------------------------------
+    try:
+        response = requests.get(
+            ABUSEIPDB_URL,
+            headers=headers,
+            params=params,
+            timeout=5,
         )
 
-        return safe_result
+        # -----------------------------------------------------
+        # 4. Handle bad HTTP status codes
+        # -----------------------------------------------------
+        response.raise_for_status()
 
-    # 5. Other network errors
-    except requests.RequestException as e:
+        # -----------------------------------------------------
+        # 5. Parse JSON response
+        # -----------------------------------------------------
+        data = response.json()
 
+    except requests.exceptions.Timeout:
         logger.error(
-            "Network error during enrichment for IP %s: %s",
+            "ENRICHMENT_FAILURE ip=%s reason=timeout",
             ip,
-            e
         )
 
-        return safe_result
+        return {
+            "ip": ip,
+            "reputation_score": 0,
+            "source": "lookup_failed",
+            "reason": "timeout",
+        }
 
-    # 6. JSON parsing errors
-    except ValueError as e:
-
+    except requests.exceptions.ConnectionError:
         logger.error(
-            "JSON parse error during enrichment for IP %s: %s",
+            "ENRICHMENT_FAILURE ip=%s reason=network_error",
             ip,
-            e
         )
 
-        return safe_result
+        return {
+            "ip": ip,
+            "reputation_score": 0,
+            "source": "lookup_failed",
+            "reason": "network_error",
+        }
 
-    # 7. Any unexpected error
-    except Exception as e:
-
+    except requests.exceptions.HTTPError as exc:
         logger.error(
-            "Unexpected enrichment error for IP %s: %s",
+            "ENRICHMENT_FAILURE ip=%s reason=http_error error=%s",
             ip,
-            e
+            exc,
         )
 
-        return safe_result
+        return {
+            "ip": ip,
+            "reputation_score": 0,
+            "source": "lookup_failed",
+            "reason": "http_error",
+        }
+
+    except ValueError:
+        logger.error(
+            "ENRICHMENT_FAILURE ip=%s reason=invalid_json",
+            ip,
+        )
+
+        return {
+            "ip": ip,
+            "reputation_score": 0,
+            "source": "lookup_failed",
+            "reason": "invalid_json",
+        }
+
+    except requests.exceptions.RequestException as exc:
+        logger.error(
+            "ENRICHMENT_FAILURE ip=%s reason=request_error error=%s",
+            ip,
+            exc,
+        )
+
+        return {
+            "ip": ip,
+            "reputation_score": 0,
+            "source": "lookup_failed",
+            "reason": "request_error",
+        }
+
+    except Exception as exc:
+        logger.exception(
+            "ENRICHMENT_FAILURE ip=%s reason=unexpected_error error=%s",
+            ip,
+            exc,
+        )
+
+        return {
+            "ip": ip,
+            "reputation_score": 0,
+            "source": "lookup_failed",
+            "reason": "unexpected_error",
+        }
+
+    # ---------------------------------------------------------
+    # 6. Extract AbuseIPDB data safely
+    # ---------------------------------------------------------
+    try:
+        data_section = data.get("data", {})
+
+        if not isinstance(data_section, dict):
+            raise ValueError("Invalid AbuseIPDB data structure")
+
+        abuse_score = data_section.get(
+            "abuseConfidenceScore",
+            0,
+        )
+
+        country_code = data_section.get(
+            "countryCode"
+        )
+
+        isp = data_section.get(
+            "isp"
+        )
+
+        asn = data_section.get(
+            "asn"
+        )
+
+        # -----------------------------------------------------
+        # 7. Build successful enrichment result
+        # -----------------------------------------------------
+        result = {
+            "ip": ip,
+            "reputation_score": abuse_score,
+            "source": "AbuseIPDB",
+            "country": country_code or "Unknown",
+            "isp": isp or "Unknown",
+            "asn": str(asn) if asn else "Unknown",
+        }
+
+        logger.info(
+            "ENRICHMENT_SUCCESS ip=%s reputation_score=%s",
+            ip,
+            abuse_score,
+        )
+
+        return result
+
+    except Exception as exc:
+        logger.exception(
+            "ENRICHMENT_FAILURE ip=%s reason=response_parsing_error error=%s",
+            ip,
+            exc,
+        )
+
+        return {
+            "ip": ip,
+            "reputation_score": 0,
+            "source": "lookup_failed",
+            "reason": "response_parsing_error",
+        }
