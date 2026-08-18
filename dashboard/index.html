@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,497 +7,727 @@
     <title>SOAR Incident Containment Engine</title>
 
     <style>
-
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #222;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
         }
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 30px auto;
+        /* Header */
+        header {
+            background: #111827;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
         }
 
-        h1 {
+        header h1 {
+            font-size: 24px;
             margin-bottom: 5px;
         }
 
-        .subtitle {
-            color: #666;
-            margin-bottom: 25px;
+        header p {
+            font-size: 13px;
+            color: #cbd5e1;
         }
 
-        /* Summary */
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
 
-        .summary {
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 18px;
             margin-bottom: 25px;
         }
 
         .summary-card {
             background: white;
+            border-radius: 10px;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
 
         .summary-card h3 {
-            margin: 0 0 10px;
-            font-size: 15px;
-            color: #666;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            text-transform: uppercase;
         }
 
-        .summary-card p {
-            margin: 0;
+        .summary-card .number {
             font-size: 28px;
             font-weight: bold;
         }
 
-        /* Alert Card */
-
-        .alert-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        .total {
+            color: #2563eb;
         }
 
-        .alert-header {
+        .high-risk {
+            color: #dc2626;
+        }
+
+        .contained {
+            color: #16a34a;
+        }
+
+        .pending {
+            color: #d97706;
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .section-header h2 {
+            font-size: 19px;
+        }
+
+        .section-header p {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        /* Table */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 16px;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
         }
 
         .alert-id {
-            font-size: 18px;
             font-weight: bold;
+            color: #2563eb;
         }
 
-        .field {
-            margin: 10px 0;
+        .source-ip {
+            font-family: monospace;
+            color: #374151;
         }
 
-        .label {
-            font-weight: bold;
-        }
-
-        /* Risk */
-
-        .risk {
+        /* Badges */
+        .badge {
             display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
             font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .severity-critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .severity-high {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .severity-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .severity-low {
+            background: #dcfce7;
+            color: #166534;
         }
 
         .risk-high {
-            color: #b00020;
-            background: #ffe5e5;
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         .risk-medium {
-            color: #b35c00;
-            background: #fff0d6;
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .risk-low {
-            color: #187a35;
-            background: #e3f7e8;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .action-contained {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .action-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .action-failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .action-monitoring {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Reputation Score */
+        .score {
+            font-weight: bold;
+        }
+
+        .score-high {
+            color: #dc2626;
+        }
+
+        .score-medium {
+            color: #d97706;
+        }
+
+        .score-low {
+            color: #16a34a;
         }
 
         /* Action */
-
-        .action {
-            font-weight: bold;
+        .recommended-action {
+            font-weight: 600;
         }
 
-        /* Status */
-
-        .status {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
+        /* Refresh Button */
+        .refresh-btn {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
         }
 
-        .status-pending {
-            color: #b35c00;
-            background: #fff0d6;
+        .refresh-btn:hover {
+            background: #1d4ed8;
         }
 
-        .status-progress {
-            color: #005bbb;
-            background: #e4f0ff;
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #6b7280;
+            font-size: 12px;
         }
 
-        .status-completed {
-            color: #187a35;
-            background: #e3f7e8;
-        }
-
-        .status-failed {
-            color: #b00020;
-            background: #ffe5e5;
-        }
-
-        .section-title {
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-
-        @media (max-width: 800px) {
-
-            .summary {
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .summary-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
 
-            .summary {
+            .summary-grid {
                 grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 18px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div>
+            <h1>SOAR Incident Containment Engine</h1>
+            <p>Security Orchestration, Automation and Response Dashboard</p>
+        </div>
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+            System Operational
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <!-- Summary -->
+        <section class="summary-grid">
+
+            <div class="summary-card">
+                <h3>Total Alerts</h3>
+                <div class="number total" id="totalAlerts">0</div>
+            </div>
+
+            <div class="summary-card">
+                <h3>High Risk</h3>
+                <div class="number high-risk" id="highRiskAlerts">0</div>
+            </div>
+
+            <div class="summary-card">
+                <h3>Contained</h3>
+                <div class="number contained" id="containedAlerts">0</div>
+            </div>
+
+            <div class="summary-card">
+                <h3>Pending Action</h3>
+                <div class="number pending" id="pendingAlerts">0</div>
+            </div>
+
+        </section>
+
+
+        <!-- Incident Table -->
+        <section class="section">
+
+            <div class="section-header">
+                <div>
+                    <h2>Incident Overview</h2>
+                    <p>
+                        Monitor alerts, risk levels, recommended actions and containment status.
+                    </p>
+                </div>
+
+                <button class="refresh-btn" onclick="loadDashboard()">
+                    Refresh
+                </button>
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Alert ID</th>
+                            <th>Source IP</th>
+                            <th>Alert Type</th>
+                            <th>Severity</th>
+                            <th>Reputation Score</th>
+                            <th>Risk Level</th>
+                            <th>Recommended Action</th>
+                            <th>Action Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="alertTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        SOAR Incident Containment Engine | Week 4 Dashboard Review
+    </footer>
+
+
+    <script>
+
+        /*
+         * Sample dashboard data.
+         *
+         * Replace this sample data with backend/API data
+         * when the final backend endpoint is available.
+         */
+
+        const sampleAlerts = [
+
+            {
+                alert_id: "ALT-001",
+                source_ip: "192.168.1.105",
+                alert_type: "Brute Force Attack",
+                severity: "High",
+                reputation_score: 92,
+                risk_level: "High",
+                recommended_action: "Block IP",
+                action_status: "Contained"
+            },
+
+            {
+                alert_id: "ALT-002",
+                source_ip: "10.10.20.15",
+                alert_type: "Malware Detection",
+                severity: "Critical",
+                reputation_score: 98,
+                risk_level: "High",
+                recommended_action: "Isolate Host",
+                action_status: "Contained"
+            },
+
+            {
+                alert_id: "ALT-003",
+                source_ip: "172.16.5.20",
+                alert_type: "Suspicious Login",
+                severity: "Medium",
+                reputation_score: 55,
+                risk_level: "Medium",
+                recommended_action: "Monitor User",
+                action_status: "Monitoring"
+            },
+
+            {
+                alert_id: "ALT-004",
+                source_ip: "8.8.8.8",
+                alert_type: "Network Anomaly",
+                severity: "Low",
+                reputation_score: 15,
+                risk_level: "Low",
+                recommended_action: "Continue Monitoring",
+                action_status: "Monitoring"
+            },
+
+            {
+                alert_id: "ALT-005",
+                source_ip: "45.33.32.156",
+                alert_type: "Port Scanning",
+                severity: "High",
+                reputation_score: 87,
+                risk_level: "High",
+                recommended_action: "Block IP",
+                action_status: "Pending"
+            }
+
+        ];
+
+
+        /*
+         * Get CSS class based on severity
+         */
+        function getSeverityClass(severity) {
+
+            switch (severity.toLowerCase()) {
+
+                case "critical":
+                    return "severity-critical";
+
+                case "high":
+                    return "severity-high";
+
+                case "medium":
+                    return "severity-medium";
+
+                case "low":
+                    return "severity-low";
+
+                default:
+                    return "";
+
             }
 
         }
 
-    </style>
-</head>
 
+        /*
+         * Get CSS class based on risk level
+         */
+        function getRiskClass(risk) {
 
-<body>
+            switch (risk.toLowerCase()) {
 
-<div class="container">
+                case "high":
+                    return "risk-high";
 
-    <h1>SOAR Incident Containment Engine</h1>
+                case "medium":
+                    return "risk-medium";
 
-    <p class="subtitle">
-        Incident Monitoring Dashboard – Week 1, Week 2 & Week 3
-    </p>
+                case "low":
+                    return "risk-low";
 
+                default:
+                    return "";
 
-    <!-- ========================= -->
-    <!-- SUMMARY -->
-    <!-- ========================= -->
+            }
 
-    <div class="summary">
+        }
 
-        <div class="summary-card">
-            <h3>Total Alerts</h3>
-            <p>3</p>
-        </div>
 
-        <div class="summary-card">
-            <h3>High Risk</h3>
-            <p>1</p>
-        </div>
+        /*
+         * Get CSS class based on action status
+         */
+        function getActionStatusClass(status) {
 
-        <div class="summary-card">
-            <h3>Actions Pending</h3>
-            <p>1</p>
-        </div>
+            switch (status.toLowerCase()) {
 
-        <div class="summary-card">
-            <h3>Actions Completed</h3>
-            <p>1</p>
-        </div>
+                case "contained":
+                    return "action-contained";
 
-    </div>
+                case "pending":
+                    return "action-pending";
 
+                case "failed":
+                    return "action-failed";
 
-    <h2 class="section-title">Incident Alerts</h2>
+                case "monitoring":
+                    return "action-monitoring";
 
+                default:
+                    return "";
 
-    <!-- ========================= -->
-    <!-- ALERT 001 -->
-    <!-- ========================= -->
+            }
 
-    <div class="alert-card">
+        }
 
-        <div class="alert-header">
 
-            <div class="alert-id">
-                Alert ID: ALT-001
-            </div>
+        /*
+         * Get reputation score class
+         */
+        function getScoreClass(score) {
 
-            <span class="risk risk-high">
-                HIGH RISK
-            </span>
+            if (score >= 80) {
+                return "score-high";
+            }
 
-        </div>
+            if (score >= 40) {
+                return "score-medium";
+            }
 
+            return "score-low";
 
-        <!-- WEEK 1 -->
+        }
 
-        <div class="field">
-            <span class="label">Time:</span>
-            2026-08-11 10:00
-        </div>
 
-        <div class="field">
-            <span class="label">Source IP:</span>
-            192.168.1.100
-        </div>
+        /*
+         * Display alerts in dashboard
+         */
+        function renderAlerts(alerts) {
 
-        <div class="field">
-            <span class="label">Alert Type:</span>
-            Suspicious Login
-        </div>
+            const tableBody = document.getElementById("alertTableBody");
 
-        <div class="field">
-            <span class="label">Host:</span>
-            workstation-01
-        </div>
+            tableBody.innerHTML = "";
 
-        <div class="field">
-            <span class="label">Severity:</span>
-            High
-        </div>
 
+            alerts.forEach(alert => {
 
-        <!-- WEEK 2 -->
+                const row = document.createElement("tr");
 
-        <div class="field">
-            <span class="label">Reputation Score:</span>
-            90
-        </div>
+                row.innerHTML = `
 
-        <div class="field">
-            <span class="label">Risk Level:</span>
+                    <td>
+                        <span class="alert-id">
+                            ${alert.alert_id}
+                        </span>
+                    </td>
 
-            <span class="risk risk-high">
-                High
-            </span>
+                    <td>
+                        <span class="source-ip">
+                            ${alert.source_ip}
+                        </span>
+                    </td>
 
-        </div>
+                    <td>
+                        ${alert.alert_type}
+                    </td>
 
-        <div class="field">
-            <span class="label">Enrichment Source:</span>
-            Threat Intelligence API
-        </div>
+                    <td>
+                        <span class="badge ${getSeverityClass(alert.severity)}">
+                            ${alert.severity}
+                        </span>
+                    </td>
 
+                    <td>
+                        <span class="score ${getScoreClass(alert.reputation_score)}">
+                            ${alert.reputation_score}
+                        </span>
+                    </td>
 
-        <!-- WEEK 3 -->
+                    <td>
+                        <span class="badge ${getRiskClass(alert.risk_level)}">
+                            ${alert.risk_level}
+                        </span>
+                    </td>
 
-        <div class="field">
-            <span class="label">Recommended Action:</span>
+                    <td>
+                        <span class="recommended-action">
+                            ${alert.recommended_action}
+                        </span>
+                    </td>
 
-            <span class="action">
-                Block Source IP
-            </span>
+                    <td>
+                        <span class="badge ${getActionStatusClass(alert.action_status)}">
+                            ${alert.action_status}
+                        </span>
+                    </td>
 
-        </div>
+                `;
 
-        <div class="field">
-            <span class="label">Action Status:</span>
+                tableBody.appendChild(row);
 
-            <span class="status status-pending">
-                Pending
-            </span>
+            });
 
-        </div>
 
-    </div>
+            updateSummary(alerts);
 
+        }
 
 
-    <!-- ========================= -->
-    <!-- ALERT 002 -->
-    <!-- ========================= -->
+        /*
+         * Update dashboard summary cards
+         */
+        function updateSummary(alerts) {
 
-    <div class="alert-card">
+            const total = alerts.length;
 
-        <div class="alert-header">
+            const highRisk = alerts.filter(
+                alert => alert.risk_level.toLowerCase() === "high"
+            ).length;
 
-            <div class="alert-id">
-                Alert ID: ALT-002
-            </div>
+            const contained = alerts.filter(
+                alert => alert.action_status.toLowerCase() === "contained"
+            ).length;
 
-            <span class="risk risk-medium">
-                MEDIUM RISK
-            </span>
+            const pending = alerts.filter(
+                alert => alert.action_status.toLowerCase() === "pending"
+            ).length;
 
-        </div>
 
+            document.getElementById("totalAlerts").textContent = total;
 
-        <!-- WEEK 1 -->
+            document.getElementById("highRiskAlerts").textContent = highRisk;
 
-        <div class="field">
-            <span class="label">Time:</span>
-            2026-08-11 10:15
-        </div>
+            document.getElementById("containedAlerts").textContent = contained;
 
-        <div class="field">
-            <span class="label">Source IP:</span>
-            10.10.10.25
-        </div>
+            document.getElementById("pendingAlerts").textContent = pending;
 
-        <div class="field">
-            <span class="label">Alert Type:</span>
-            Port Scan
-        </div>
+        }
 
-        <div class="field">
-            <span class="label">Host:</span>
-            server-02
-        </div>
 
-        <div class="field">
-            <span class="label">Severity:</span>
-            Medium
-        </div>
+        /*
+         * Load dashboard
+         *
+         * Currently using sample data.
+         *
+         * When the backend API is ready, replace this
+         * section with fetch("/api/alerts").
+         */
+        async function loadDashboard() {
 
+            try {
 
-        <!-- WEEK 2 -->
+                /*
+                 * Example backend integration:
+                 *
+                 * const response = await fetch("/api/alerts");
+                 * const alerts = await response.json();
+                 * renderAlerts(alerts);
+                 */
 
-        <div class="field">
-            <span class="label">Reputation Score:</span>
-            60
-        </div>
+                renderAlerts(sampleAlerts);
 
-        <div class="field">
-            <span class="label">Risk Level:</span>
+            } catch (error) {
 
-            <span class="risk risk-medium">
-                Medium
-            </span>
+                console.error("Dashboard loading failed:", error);
 
-        </div>
+            }
 
-        <div class="field">
-            <span class="label">Enrichment Source:</span>
-            Threat Intelligence API
-        </div>
+        }
 
 
-        <!-- WEEK 3 -->
+        /*
+         * Load dashboard when page opens
+         */
+        document.addEventListener("DOMContentLoaded", loadDashboard);
 
-        <div class="field">
-            <span class="label">Recommended Action:</span>
-
-            <span class="action">
-                Investigate Source
-            </span>
-
-        </div>
-
-        <div class="field">
-            <span class="label">Action Status:</span>
-
-            <span class="status status-progress">
-                In Progress
-            </span>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- ========================= -->
-    <!-- ALERT 003 -->
-    <!-- ========================= -->
-
-    <div class="alert-card">
-
-        <div class="alert-header">
-
-            <div class="alert-id">
-                Alert ID: ALT-003
-            </div>
-
-            <span class="risk risk-low">
-                LOW RISK
-            </span>
-
-        </div>
-
-
-        <!-- WEEK 1 -->
-
-        <div class="field">
-            <span class="label">Time:</span>
-            2026-08-11 10:30
-        </div>
-
-        <div class="field">
-            <span class="label">Source IP:</span>
-            10.10.10.50
-        </div>
-
-        <div class="field">
-            <span class="label">Alert Type:</span>
-            Normal Login
-        </div>
-
-        <div class="field">
-            <span class="label">Host:</span>
-            workstation-05
-        </div>
-
-        <div class="field">
-            <span class="label">Severity:</span>
-            Low
-        </div>
-
-
-        <!-- WEEK 2 -->
-
-        <div class="field">
-            <span class="label">Reputation Score:</span>
-            10
-        </div>
-
-        <div class="field">
-            <span class="label">Risk Level:</span>
-
-            <span class="risk risk-low">
-                Low
-            </span>
-
-        </div>
-
-        <div class="field">
-            <span class="label">Enrichment Source:</span>
-            Threat Intelligence API
-        </div>
-
-
-        <!-- WEEK 3 -->
-
-        <div class="field">
-            <span class="label">Recommended Action:</span>
-
-            <span class="action">
-                Monitor
-            </span>
-
-        </div>
-
-        <div class="field">
-            <span class="label">Action Status:</span>
-
-            <span class="status status-completed">
-                Completed
-            </span>
-
-        </div>
-
-    </div>
-
-</div>
+    </script>
 
 </body>
-
 </html>
